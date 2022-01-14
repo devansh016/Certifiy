@@ -1,13 +1,13 @@
 {
-  "name": "certificate",
+  "name": "certificate-manager",
   "version": "1.0.0",
-  "description": "",
+  "description": "Generate and verify certificates for you",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index"
   },
-  "author": "",
+  "author": "Devansh Chaudhary",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
@@ -21,5 +21,14 @@
     "mongoose": "^6.1.6",
     "multer": "^1.4.4",
     "path": "^0.12.7"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devansh016/Certificate-Manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/devansh016/Certificate-Manager/issues"
+  },
+  "homepage": "https://github.com/devansh016/Certificate-Manager#readme"
 }
