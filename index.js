@@ -13,14 +13,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const certificate = require('./controllers/certificateController')
 
-// Code Testing
-// certificate.generateCertificate({
-// 	dataFile: "myFile.csv",
-// 	template: "template.png", 
-// 	fontSize: "46.7",
-// 	fontColor: ["114", "116", "164"]
-// })
-
 const mainRoute = require("./routes/mainRoute");
 app.use(mainRoute);
 

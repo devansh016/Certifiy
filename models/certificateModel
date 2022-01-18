@@ -1,0 +1,21 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+const certificateSchema = new Schema({
+	uniqueID: { type: String, unique: true, required: true},
+    path: { type: String },
+    name: { type: String },
+    email: { type: String},
+	template: { type: String},
+    createdDate: { type: Date, default: Date.now }
+});
+
+certificateSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (doc, ret) {
+    delete ret._id;
+  },
+});
+
+module.exports = mongoose.model("Certificate", certificateSchema);

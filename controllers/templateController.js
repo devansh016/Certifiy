@@ -1,4 +1,5 @@
 const multer = require("multer")
+const templateModel = require("../models/templateModel");
 const path = require('path')
 
 const imageStorage = multer.diskStorage({
@@ -25,6 +26,28 @@ const imageUpload = multer({
   }
 })
 
+async function addCertificateData({name, font, fontSize, fontColor, positionX, positionY}){
+	var template = await templateModel.findOne({name})
+	if(!template){
+		return {
+			status: "failure",
+			message: "No template exists with the following name.",
+		}
+	}
+	template.settings.font = font
+	template.settings.fontSize = fontSize
+	template.settings.fontColor = fontColor
+	template.settings.positionX = positionX
+	template.settings.positionY = positionY
+	template.readyToUse = true
+	await template.save();
+
+	return {
+		status: "success",
+		message: "Certificate template saved.",
+	}
+}
 module.exports = {
-	imageUpload
+	imageUpload,
+	addCertificateData,
 }

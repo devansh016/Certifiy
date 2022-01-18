@@ -3,9 +3,16 @@ const Schema = mongoose.Schema;
 
 const templateSchema = new Schema({
   name: { type: String, unique: true, required: true },
-  path: { type: String, unique: true, required: true },
-  filename: { type: String, unique: true, required: true },
-  size: { type: Number, default: 0},
+  path: { type: String},
+  filename: { type: String},
+  settings: {
+    font: { type: String},
+    fontSize: { type: String},
+    fontColor: { type: Array},
+    positionX: { type: Number},
+    positionY: { type: Number}
+  },
+  readyToUse: {type: Boolean, default: false},
   createdDate: { type: Date, default: Date.now }
 });
 
