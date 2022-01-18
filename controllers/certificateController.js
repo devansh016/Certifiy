@@ -15,6 +15,7 @@ async function generateCertificate({dataFile, templateName}, res){
 			"status": "Failure",
 			"message": "Setting not saved."
 		})
+		return
 	}
 	folderName = path.join(__dirname, "../data/certificate-generated/", template.name)
 	// Create Directory for certificates
@@ -35,7 +36,11 @@ async function generateCertificate({dataFile, templateName}, res){
 			output_file: path.join(__dirname, "../public/download/", template.name + ".zip")
 		 })
 		console.log("All Certificates Generated.")
-		res.redirect("download/" + template.name + ".zip")
+		res.send({
+			"status": "Success",
+			"message": "Certificate Created.",
+			"link": "download/" + template.name + ".zip"
+		})
 	});
 	
 }
@@ -67,8 +72,8 @@ async function createCertificate({name, email, template}){
 	var certificate = new certificateModel({
 		name, 
 		email,
-		"template": templateName,
-		"path": certiPath,
+		"template": template.name,
+		"path":  path.join("data/certificate-generated/", template.name,"/") + template.name + "_" + currDate + ".pdf",
 		"uniqueID": template.name + "_" + currDate
 	})
 	await certificate.save()
