@@ -1,7 +1,7 @@
 function getDesigns(){
 	var config = {
 		method: 'post',
-		url: 'http://localhost/getTemplate',
+		url: '/getTemplate',
 	  };
 	  
 	  axios(config)
