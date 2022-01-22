@@ -3,7 +3,7 @@ const app = express()
 const path = require("path")
 var cors = require('cors')
 require("./utils/database")
-const port = 80;
+const port = process.env.PORT || 80;
 
 app.use(cors())
 app.use(express.json()); 
