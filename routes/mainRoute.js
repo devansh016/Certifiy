@@ -1,41 +1,38 @@
 const express = require("express");
-const res = require("express/lib/response");
-const templateController = require("../controllers/templateController");
-const templateModel = require("../models/templateModel");
+const uploadController = require("../controllers/uploadController");
+const eventController = require("../controllers/eventController");
+const eventModel = require("../models/eventModel");
 const router = express.Router();
-const certificate = require('../controllers/certificateController')
-const certificateDataController = require('../controllers/certificateDataController')
+const certificateController = require('../controllers/certificateController');
+const certificateModel = require("../models/certificateModel");
 
+// Done
+router.post('/createEvent', uploadController.imageUpload.single('image'), createEvent)
+router.post('/addEventData', addEventData)
+router.post('/generateCertificate', uploadController.csvUpload.single('csv'), generateCertificates)
+router.post('/getEvent', getEventList)
+router.post('/getCertificateLogs', getCertificateLogs)
 
-
-router.post('/createCertificateTemplate', templateController.imageUpload.single('image'), createCertificateTemplate) // Add Ceretificate Template
-router.post('/addCertificateData', addCertificateData)
-router.post('/generateCertificate', certificateDataController.certificateDataUpload.single('csv'), generateCertificate)
-router.post('/getTemplate', getTemplateList)
-
-async function createCertificateTemplate(req, res, next) {
+// Step 1: Creating a event in DB
+async function createEvent(req, res, next) {
 	if(req.file){
-		// Checks if design is duplicate
-		if( await templateModel.findOne({"name": req.body.name}) ){
-			console.log("true")
+		// Checks if event is duplicate
+		if( await eventModel.findOne( {"name": req.body.name} ) ){
 			res.status(400).json({
 				status: "failure",
-				message: "Design with same name already exists!!",
+				message: "Event with same name already exists!",
 			})
-
 		} else {
-		// Saving Design in Database
-			const template = new templateModel({
+		// Creating a Event in Database
+			const event = new eventModel({
 				"name": req.body.name,
-				"path": req.file.path,
+				"designPath": req.file.path,
 				"filename": req.file.filename,
-				"size": req.file.size
 			})
-			await template.save()
-
+			await event.save()
 			res.status(200).json({
 				status: "success",
-				message: "Certificate Design created successfully!!",
+				message: "Event created successfully!",
 			})
 		}
 	} else {
@@ -47,23 +44,29 @@ async function createCertificateTemplate(req, res, next) {
 	res.send()
 }
 
-async function getTemplateList(req, res, next){
-	const templateList = await templateModel.distinct("name")
-	res.status(200).send(templateList);
-}
-
-async function addCertificateData(req, res, next){
-	templateController.addCertificateData(req.body)
+// Step 2: Adding event data in DB
+async function addEventData(req, res, next){
+	eventController.addEventData(req.body)
 		.then((data) => { res.send(data) })
 }
 
-async function generateCertificate(req, res, next) {
+// Step 3: Add CSV File and generate certificates 
+async function generateCertificates(req, res, next) {
 	if(req.file){
-		certificate.generateCertificate({
+		certificateController.generateCertificates({
 			"dataFile": req.file.path, 
-			"templateName": req.body.templateName
+			"event": req.body.event
 		}, res)
 	}
+}
+
+// Send all events list
+async function getEventList(req, res, next){
+	res.status(200).send(await eventModel.distinct("name"));
+}
+
+async function getCertificateLogs(req, res, next){
+	res.status(200).send(await certificateModel.find({"event": req.body.event}, { name: 1, certificateID: 1}))
 }
 
 module.exports = router;

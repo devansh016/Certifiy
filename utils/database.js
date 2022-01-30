@@ -10,5 +10,5 @@ mongoose.connect(process.env.MONGODB_URL, connectionOptions);
 mongoose.Promise = global.Promise;
 
 module.exports = {
-  User: require("../models/templateModel"),
+  User: require("../models/eventModel"),
 };
