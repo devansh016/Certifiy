@@ -12,6 +12,7 @@ router.post('/addEventData', addEventData)
 router.post('/generateCertificate', uploadController.csvUpload.single('csv'), generateCertificates)
 router.post('/getEvent', getEventList)
 router.post('/getCertificateLogs', getCertificateLogs)
+router.get('/verifyCertificate', verifyCertificate)
 
 // Step 1: Creating a event in DB
 async function createEvent(req, res, next) {
@@ -68,5 +69,12 @@ async function getEventList(req, res, next){
 async function getCertificateLogs(req, res, next){
 	res.status(200).send(await certificateModel.find({"event": req.body.event}, { name: 1, certificateID: 1}))
 }
+async function verifyCertificate(req, res, next){
+	certificateController.verifyCertificate(req.body.certificateID)
+		.then(data => {
+			res.send(data)
+		})
+}
+
 
 module.exports = router;
